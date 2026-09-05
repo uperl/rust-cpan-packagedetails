@@ -1,4 +1,4 @@
-use anyhow::{bail, Result};
+use anyhow::{Result, bail};
 
 /// A single token of a compiled SQL `LIKE` pattern.
 enum Tok {
@@ -21,7 +21,9 @@ fn compile(pattern: &str) -> Result<Vec<Tok>> {
             '\\' => match chars.next() {
                 Some(escaped) => toks.push(Tok::Lit(escaped.to_ascii_lowercase())),
                 None => {
-                    bail!("invalid LIKE pattern: pattern ends with a trailing '\\' escape character");
+                    bail!(
+                        "invalid LIKE pattern: pattern ends with a trailing '\\' escape character"
+                    );
                 }
             },
             '%' => toks.push(Tok::Star),

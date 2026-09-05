@@ -54,11 +54,19 @@ fn duplicate_package_in_file_is_an_error() {
 #[test]
 fn add_entry_rejects_duplicates() {
     let mut pd = PackageDetails::new();
-    pd.add_entry(Entry::new("Foo::Bar", Some("1.0".to_string()), "A/AB/Foo-Bar-1.0.tar.gz"))
-        .unwrap();
+    pd.add_entry(Entry::new(
+        "Foo::Bar",
+        Some("1.0".to_string()),
+        "A/AB/Foo-Bar-1.0.tar.gz",
+    ))
+    .unwrap();
 
     let err = pd
-        .add_entry(Entry::new("Foo::Bar", Some("2.0".to_string()), "A/AB/Foo-Bar-2.0.tar.gz"))
+        .add_entry(Entry::new(
+            "Foo::Bar",
+            Some("2.0".to_string()),
+            "A/AB/Foo-Bar-2.0.tar.gz",
+        ))
         .unwrap_err();
     assert!(err.to_string().contains("duplicate package name: Foo::Bar"));
 
@@ -82,7 +90,11 @@ fn remove_entry() {
 #[test]
 fn search_substring_is_case_insensitive() {
     let pd = PackageDetails::parse_str(SAMPLE).unwrap();
-    let mut names: Vec<&str> = pd.search_substring("foo").iter().map(|e| e.package()).collect();
+    let mut names: Vec<&str> = pd
+        .search_substring("foo")
+        .iter()
+        .map(|e| e.package())
+        .collect();
     names.sort_unstable();
     assert_eq!(names, vec!["Foo::Bar", "Foo::Baz"]);
 
@@ -131,7 +143,10 @@ fn round_trip_through_gzip_bytes() {
 
     let reloaded = PackageDetails::load_bytes(&gz).unwrap();
     assert_eq!(reloaded.len(), pd.len());
-    assert_eq!(reloaded.get("Quux::Thing").unwrap().path(), "Q/QU/QUUX/Quux-Thing-0.01.tar.gz");
+    assert_eq!(
+        reloaded.get("Quux::Thing").unwrap().path(),
+        "Q/QU/QUUX/Quux-Thing-0.01.tar.gz"
+    );
 }
 
 #[test]
@@ -140,8 +155,12 @@ fn round_trip_through_files() {
     std::fs::create_dir_all(&dir).unwrap();
 
     let mut pd = PackageDetails::new();
-    pd.add_entry(Entry::new("My::Module", Some("0.1".to_string()), "M/MY/ME/My-Module-0.1.tar.gz"))
-        .unwrap();
+    pd.add_entry(Entry::new(
+        "My::Module",
+        Some("0.1".to_string()),
+        "M/MY/ME/My-Module-0.1.tar.gz",
+    ))
+    .unwrap();
 
     let gz_path = dir.join("02packages.details.txt.gz");
     let plain_path = dir.join("02packages.details.txt");
@@ -161,8 +180,10 @@ fn round_trip_through_files() {
 #[test]
 fn sort_by_package_orders_entries() {
     let mut pd = PackageDetails::new();
-    pd.add_entry(Entry::new("Zebra::Thing", None, "z.tar.gz")).unwrap();
-    pd.add_entry(Entry::new("Alpha::Thing", None, "a.tar.gz")).unwrap();
+    pd.add_entry(Entry::new("Zebra::Thing", None, "z.tar.gz"))
+        .unwrap();
+    pd.add_entry(Entry::new("Alpha::Thing", None, "a.tar.gz"))
+        .unwrap();
     pd.sort_by_package();
 
     let names: Vec<&str> = pd.packages().collect();

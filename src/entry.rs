@@ -1,4 +1,4 @@
-use anyhow::{bail, Result};
+use anyhow::{Result, bail};
 
 /// A single entry (row) in the package details file: a Perl package/module
 /// name, its version (if known), and the path to the distribution that
@@ -14,7 +14,11 @@ impl Entry {
     /// Create a new entry. `version` of `None` is written out as the literal
     /// `undef`, matching PAUSE's convention for packages with no declared
     /// `$VERSION`.
-    pub fn new(package: impl Into<String>, version: Option<String>, path: impl Into<String>) -> Self {
+    pub fn new(
+        package: impl Into<String>,
+        version: Option<String>,
+        path: impl Into<String>,
+    ) -> Self {
         Entry {
             package: package.into(),
             version,
