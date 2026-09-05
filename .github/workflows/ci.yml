@@ -7,4 +7,4 @@ on:
 
 jobs:
   ci:
-    uses: plicease/action-rust-ci/.github/workflows/ci.yml@main
+    uses: uperl/action-rust-ci/.github/workflows/ci.yml@v1
