@@ -28,7 +28,7 @@ mod like;
 pub use entry::Entry;
 pub use header::Header;
 
-use anyhow::{bail, Context, Result};
+use anyhow::{Context, Result, bail};
 use indexmap::IndexMap;
 use std::io::{Read, Write};
 use std::path::Path;
@@ -62,8 +62,8 @@ impl PackageDetails {
     /// extension), otherwise it's read as plain text.
     pub fn load_file(path: impl AsRef<Path>) -> Result<Self> {
         let path = path.as_ref();
-        let bytes = std::fs::read(path)
-            .with_context(|| format!("failed to read {}", path.display()))?;
+        let bytes =
+            std::fs::read(path).with_context(|| format!("failed to read {}", path.display()))?;
         Self::load_bytes(&bytes)
     }
 
@@ -138,7 +138,12 @@ impl PackageDetails {
         }
         out.push('\n');
 
-        let name_width = self.entries.values().map(|e| e.package().len()).max().unwrap_or(0);
+        let name_width = self
+            .entries
+            .values()
+            .map(|e| e.package().len())
+            .max()
+            .unwrap_or(0);
         let version_width = self
             .entries
             .values()
